@@ -4,10 +4,10 @@ from typing import Dict, Any
 from app.api import InvoiceRisk, InvoicePayload
 
 from app.model import Model
+from app.api import init_app
 
 from fastapi import status
 
-from app.api import init_app
 
 app = init_app()
 
