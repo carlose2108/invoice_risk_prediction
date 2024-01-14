@@ -10,4 +10,4 @@ steps:
   entrypoint: gcloud
   args: ['run', 'deploy', '${_SERVICE_NAME}', '--image', 'us-central1-docker.pkg.dev/${_PROJECT_ID}/xepelin-invoice/${_IMAGE}:latest', '--region', '${_REGION}', '--allow-unauthenticated', '--service-account','${_SERVICE_ACC}']
 images:
-- us-central1-docker.pkg.dev/${_PROJECT_ID}/chatllm-demo/${_IMAGE}:latest
+- us-central1-docker.pkg.dev/${_PROJECT_ID}/xepelin-invoice/${_IMAGE}:latest
