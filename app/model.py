@@ -22,6 +22,8 @@ class Model:
 
         self.df = sample_df
         self.model = None
+        # Initialize StandardScaler
+        self.scaler = StandardScaler()
 
     def prepare_data(self, df: pd.DataFrame = None) -> pd.DataFrame:
         """"
@@ -43,11 +45,8 @@ class Model:
         excluded_cols = ["invoiceId", "payerId", "invoice_risk"]
         feature_cols = df.columns.difference(excluded_cols)
 
-        # Initialize StandardScaler
-        scaler = StandardScaler()
-
         # Applying StandardScaler for other columns
-        df[feature_cols] = scaler.fit_transform(df[feature_cols])
+        df[feature_cols] = self.scaler.fit_transform(df[feature_cols])
 
         return df
 
@@ -127,7 +126,8 @@ class Model:
         if self.model is None:
             raise ValueError("Model has not been trained yet. Use the fit method first.")
 
-        invoices_to_predict = self.df[self.df["invoiceId"].isin(invoice_ids)].drop(columns=["invoiceId", "invoice_risk"])
+        invoices_to_predict = self.df[self.df["invoiceId"].isin(invoice_ids)].drop(
+            columns=["invoiceId", "invoice_risk"])
 
         # Make predictions
         predictions = self.model.predict(invoices_to_predict)
@@ -150,3 +150,18 @@ class Model:
             print(f"Model saved successfully at {path}.")
         else:
             print("Model has not been trained yet.")
+
+    def preprocess_data_api(self, dataframe: pd.DataFrame, invoice_ids: list) -> pd.DataFrame:
+        """
+        Preprocess data from API request.
+
+        Parameters:
+        - dataframe: DataFrame, pandas dataframe to be processed.
+        -invoice_ids: list, invoice ids to make a prediction.
+        """
+        invoices_to_predict = dataframe[dataframe["invoiceId"].isin(invoice_ids)].drop(columns=["Unnamed: 0", "invoiceId"])
+
+        # Applying StandardScaler for other columns
+        invoices_to_predict = self.scaler.fit_transform(invoices_to_predict)
+
+        return invoices_to_predict
